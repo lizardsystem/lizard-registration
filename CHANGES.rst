@@ -13,5 +13,6 @@ Changelog of lizard-registration
 
 - Initial library skeleton created by nensskel.  [Alexandr Seleznev]
 
-- Moved 'Gebruikersbeheer' functionalities from vss into lizard_registration.
+- Moved 'Gebruikersbeheer' functionalities from vss into
+  lizard_registration (issue 1).
 
