@@ -1,9 +1,23 @@
 # (c) Nelen & Schuurmans.  GPL licensed, see LICENSE.txt.
 
 from django.test import TestCase
+from lizard_registration.views import create_activation_key
 
 
-class ExampleTest(TestCase):
+class User(object):
+    def __init__(self, username):
+        self.username = username
 
-    def test_something(self):
-        self.assertEquals(1, 1)
+
+class RegistrationTest(TestCase):
+    def test_create_activation_key(self):
+        """
+        Expected not None and not empty string from
+        create_activation_key(..) function.
+        """
+        user = User('test')
+        key = create_activation_key(user)
+        self.assertFalse(None, key)
+        self.assertFalse("", key)
+
+

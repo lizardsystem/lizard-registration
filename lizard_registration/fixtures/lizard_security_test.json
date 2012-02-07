@@ -1,0 +1,47 @@
+[
+  {
+    "pk": 1,
+    "model": "lizard_security.dataset",
+    "fields": {
+      "name": "HHNK"
+    }
+  },
+  {
+    "pk": 2,
+    "model": "lizard_security.dataset",
+    "fields": {
+      "name": "Waternet"
+    }
+  },
+  {
+    "pk": 3,
+    "model": "lizard_security.dataset",
+    "fields": {
+      "name": "Rijnland"
+    }
+  },
+  {
+    "pk": 1,
+    "model": "lizard_security.usergroup",
+    "fields": {
+      "managers": [
+        1
+      ],
+      "name": "Waternet_beheerders",
+      "members": []
+    }
+  },
+  {
+    "pk": 2,
+    "model": "lizard_security.usergroup",
+    "fields": {
+      "managers": [
+        1
+      ],
+      "name": "Waternet_beheerder",
+      "members": [
+        1
+      ]
+    }
+  }
+]

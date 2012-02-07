@@ -1,0 +1,46 @@
+{% extends "admin/base_site.html" %}
+{% block title %}Beheren gebruikers{% endblock %}
+{% block extrastyle %}
+{% endblock %}
+{% block content %}
+<h2>Selecteer gebriuker om te wijzigen</h2>
+
+<table border=1>
+  <th>Gebruikernaam</th>
+  <th>Voornaam</th>
+  <th>Achternaam</th>
+  <th>Email</th>
+  <th>Is actief</th>
+  <th>Gebruikersgroepen</th>
+  {% for user in managed_users %}
+     <tr>
+        <td><b><a href="updateuser/{{ user.user.id }}/">{{ user.user.username }}</a></b></td>
+        <td>{{ user.user.first_name }}</td>
+        <td>{{ user.user.last_name }}</td>
+        <td>{{ user.user.email }}</td>
+        <td>{{ user.user.is_active }}</td>
+        <td>{% for group in user.user.user_group_memberships.all %}
+            {{ group.name }},
+            {% endfor %}</td>
+     </tr>
+  {% endfor %}
+</table>
+<p>
+<table>
+  <tr>
+    <td>
+      <form action="/manager/userform/">
+        <input type="submit" name="action" value="Create user" />
+      </form>
+    </td>
+    <td>
+      <form action="/">
+        <input type="submit" name="action" value="Cancel" />
+      </form>
+    </td></td>
+</table>
+{% endblock %}
+
+{% block branding %}
+<h1 id="site-name">Gebruikersbeheer</h1>
+{% endblock %}

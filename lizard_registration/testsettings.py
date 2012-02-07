@@ -39,8 +39,8 @@ DATABASES = {
     }
 SITE_ID = 1
 INSTALLED_APPS = [
-    'lizard_registration',
     'lizard_ui',
+    'lizard_security',
     'staticfiles',
     'compressor',
     'south',
@@ -68,6 +68,19 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     )
 
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
+
+MIDDLEWARE_CLASSES = (
+    # Gzip needs to be at the top.
+    'django.middleware.gzip.GZipMiddleware',
+    # Below is the default list, don't modify it.
+    'django.middleware.common.CommonMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'tls.TLSRequestMiddleware',
+    'lizard_security.middleware.SecurityMiddleware',
+    )
 
 # Used for django-staticfiles (and for media files
 STATIC_URL = '/static_media/'

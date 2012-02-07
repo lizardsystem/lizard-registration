@@ -2,8 +2,8 @@
 
 import sys
 sys.path[0:0] = [
-  '/home/alexandr/.buildout/eggs/setuptools-0.6c11-py2.6.egg',
   '/home/alexandr/.buildout/eggs/zc.buildout-1.4.4-py2.6.egg',
+  '/home/alexandr/.buildout/eggs/distribute-0.6.20-py2.6.egg',
   ]
 
 import zc.buildout.buildout

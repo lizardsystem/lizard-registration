@@ -1,0 +1,35 @@
+[
+  {
+    "pk": 1,
+    "model": "lizard_registration.organisation",
+    "fields": {
+      "name": "waternet",
+      "description": "waternet"
+    }
+  },
+  {
+    "pk": 2,
+    "model": "lizard_registration.organisation",
+    "fields": {
+      "name": "hhnk",
+      "description": "hhnk"
+    }
+  },
+  {
+    "pk": 1,
+    "model": "lizard_registration.userprofile",
+    "fields": {
+      "organisation": 1,
+      "user": 1
+    }
+  },
+  {
+    "pk": 1,
+    "model": "lizard_registration.iprangelogin",
+    "fields": {
+      "ipadres": "127.0.0.0",
+      "created_on": "2012-01-20",
+      "user": 1
+    }
+  }
+]

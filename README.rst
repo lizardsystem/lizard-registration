@@ -3,7 +3,12 @@ lizard-registration
 
 Introduction
 
-Provides the functionaities to manage user for vss.
+Provides the functionalities to manage user for vss.
 
-Usage, etc.cti
+Usage
+-------------------------------------------
+To use this app you need to provide some configuration via admin
+interface or load next fixtures:
+
+   $> bin/django loaddata lizard_security_test lizard_registration_test
 
