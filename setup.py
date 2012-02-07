@@ -15,6 +15,7 @@ install_requires = [
     'django-nose',
     'lizard-ui >= 3.0',
     'pkginfo',
+    'django-registration > 0.7',
     ],
 
 tests_require = [
@@ -22,15 +23,15 @@ tests_require = [
 
 setup(name='lizard-registration',
       version=version,
-      description="TODO",
+      description="User registration and authentication app.",
       long_description=long_description,
       # Get strings from http://www.python.org/pypi?%3Aaction=list_classifiers
       classifiers=['Programming Language :: Python',
                    'Framework :: Django',
                    ],
       keywords=[],
-      author='TODO',
-      author_email='TODO@nelen-schuurmans.nl',
+      author='Alexandr Seleznev',
+      author_email='alexandr.seleznev@nelen-schuurmans.nl',
       url='',
       license='GPL',
       packages=['lizard_registration'],
