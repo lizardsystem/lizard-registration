@@ -1,20 +1,15 @@
 # (c) Nelen & Schuurmans.  GPL licensed, see LICENSE.txt.
 
 # Create your views here.
-import json
 import logging
 import random
 import re
 
 from django.conf import settings
-from django.contrib.auth import authenticate, login
-from django.contrib.auth import logout
 from django.contrib.auth.models import User
 from django.contrib.auth.tokens import default_token_generator
-from django.core.urlresolvers import reverse
 from django.db import transaction
-from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import redirect
+from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template.loader import render_to_string
 from django.utils.hashcompat import sha_constructor
@@ -32,45 +27,6 @@ from lizard_registration.models import UserProfile
 SHA1_RE = re.compile('^[a-f0-9]{40}$')
 
 logger = logging.getLogger(__name__)
-
-
-def logout_redirect(request):
-    logout(request)
-    page = request.GET.get('url', 'homepage')
-    return redirect(page)
-
-
-#@csrf_exempt
-def login_redirect(request):
-
-    username = request.POST['username']
-    password = request.POST['password']
-    check = request.POST.get('check', False)
-
-    success = False
-
-    user = authenticate(username=username, password=password)
-
-    if user is not None:
-        if user.is_active:
-            success = True
-            answer = {'success': True}
-        else:
-            answer = {'success': False, 'msg': 'Account is niet actief'}
-    else:
-        answer = {'success': False,
-                  'msg': 'Gebruikersnaam en/of wachtwoord verkeerd'}
-
-    if success and not check:
-        #if not only check, perform the real actions
-        if request.user.is_authenticated():
-            #first logout previous user
-            logout(request)
-        login(request, user)
-        page = request.GET.get('url', 'homepage')
-        return redirect(page)
-
-    return HttpResponse(json.dumps(answer), mimetype='text/javascript')
 
 
 def activation_done(request,
@@ -339,7 +295,6 @@ def users_table_view(request):
     """Provides users related to organisation of current manager."""
     users = User.objects.filter(username=request.user)
     manager = None
-    manager_profile = None
     if users.exists():
         manager = users[0]
     else:
@@ -357,7 +312,6 @@ def users_table_view(request):
                                    'component': 'UserProfile',
                                    'message': ','.join(map(str, ex.args)),
                                    'username': manager.username})
-
 
     managed_groups = manager.managed_user_groups.all()
     managed_users = []
