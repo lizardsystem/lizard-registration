@@ -5,7 +5,7 @@ Changelog of lizard-registration
 0.2 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Added initial migration schema.
 
 
 0.1 (2012-02-07)
