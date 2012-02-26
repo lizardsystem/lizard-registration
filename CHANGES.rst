@@ -5,7 +5,9 @@ Changelog of lizard-registration
 0.1.2 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- added a context store, including model and api
+
+- added function for getting all permissions of a user (including through lizard-security)
 
 
 0.1.1 (2012-02-08)
