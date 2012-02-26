@@ -26,6 +26,31 @@ class UserProfile(models.Model):
                           self.organisation.name)
 
 
+class UserContextStore(models.Model):
+    """
+        Store for context for users
+    """
+    user = models.OneToOneField(
+        User
+    )
+    context = models.TextField(null=True, blank=True,
+                           help_text='store for context')
+
+
+
+class SessionContextStore(models.Model):
+    """
+        Store for context for users with a IPrange (these are shared accounts). Store them with the session id
+    """
+    user = models.ForeignKey(
+        User
+    )
+    session_key = models.CharField(max_length=40, unique=True,
+                                     blank=True, null=True)
+    context = models.TextField(null=True, blank=True,
+                                help_text='store for context')
+
+
 class IPrangeLogin(models.Model):
     """
     IP addresses and IP ranges used for the automatic login function

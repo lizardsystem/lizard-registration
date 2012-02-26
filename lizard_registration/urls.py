@@ -12,6 +12,8 @@ urlpatterns = patterns(
     '',
 
     (r'^admin/', include(admin.site.urls)),
+    (r'^api/',
+        include('lizard_registration.api.urls')),
     url(r'^$', 'lizard_registration.views.users_table_view',
         name="users_table_view"),
     url(r'^activate_user/(?P<activation_key>\w+)/$',

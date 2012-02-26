@@ -1,7 +1,8 @@
 # (c) Nelen & Schuurmans.  GPL licensed, see LICENSE.txt.
 
 from django.contrib.auth import login, authenticate
-
+from django.contrib.auth.models import Permission
+from django.db.models.query_utils import Q
 
 
 def db_table_exists(table, cursor=None):
@@ -50,5 +51,25 @@ def auto_login(request):
 
     return None
 
+
+def get_user_permissions_overall(user, content_type_name=None, as_list= False):
+    """
+        get overall permissions, including links through lizard_security
+
+        user: django.contrib.auth.models.User object
+        content_type_name: (optional) extra filter option
+        as_list: (optional, default False) return list with tuples with codename and name
+    """
+    permissions = Permission.objects.filter(Q(user=user)|Q(group__user=user)|Q(group__permissionmapper__user_group__members=user))
+
+    if content_type_name:
+        permissions = permissions.filter(content_type__name=content_type_name)
+
+    permissions = permissions.distinct()
+
+    if as_list:
+        return [(p.codename, p.name) for p in permissions]
+    else:
+        return permissions
 
 
