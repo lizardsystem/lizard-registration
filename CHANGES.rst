@@ -2,7 +2,7 @@ Changelog of lizard-registration
 ===================================================
 
 
-0.1.2 (unreleased)
+0.1.2 (2012-02-27)
 ------------------
 
 - added a context store, including model and api
