@@ -2,7 +2,7 @@ Changelog of lizard-registration
 ===================================================
 
 
-0.1.3 (unreleased)
+0.1.3 (2012-03-12)
 ------------------
 
 - Fixes spelling error in user management screen (fixes Projectplace issue 92).
