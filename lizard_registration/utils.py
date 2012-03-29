@@ -34,6 +34,8 @@ def auto_login(request):
                 if not request.user.is_authenticated():
                     auto_login(request)
     """
+
+    # TODO: EEKS WHY HERE?!
     from lizard_registration.models import IPrangeLogin
 
     matches = IPrangeLogin.objects.filter(ipadres=request.META.get('REMOTE_ADDR','?'))
@@ -45,6 +47,8 @@ def auto_login(request):
     if matches.count() > 0:
         match = matches[0]
         #todo: change password part of this function
+        # Needed for the 'backend' property, see
+        # https://docs.djangoproject.com/en/dev/topics/auth/
         user = authenticate(username=match.user.username, password='kikker123')
         login(request, user)
         return user

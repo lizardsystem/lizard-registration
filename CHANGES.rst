@@ -5,7 +5,7 @@ Changelog of lizard-registration
 0.1.4 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Added some comments.
 
 
 0.1.3 (2012-03-12)
