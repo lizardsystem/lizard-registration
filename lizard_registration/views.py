@@ -30,6 +30,7 @@ logger = logging.getLogger(__name__)
 
 DEFAULT_USER_GROUP = "raadpleger"
 
+
 def activation_done(request,
                     template_name='registration/activation_complete.html',
                     current_app=None, extra_context=None):
@@ -80,23 +81,12 @@ def activate_user_account(request, activation_key=None):
     return render_to_response(template_name, context)
 
 
-def merge_user_groups(user):
-    """Merge manager's group with memeber's group."""
-    member_groups = list(user.user_group_memberships.exclude(
-            name__endswith=DEFAULT_USER_GROUP).values_list('id', flat=True))
-    manager_groups = list(user.managed_user_groups.exclude(
-            name__endswith=DEFAULT_USER_GROUP).values_list('id', flat=True))
-    for group in manager_groups:
-        if group not in member_groups:
-            member_groups.append(group)
-    return member_groups
-
-
 def user_data(user_id):
     """Returns user data."""
     user = User.objects.get(id=user_id)
     user_profile = UserProfile.objects.get(user__id=user.id)
-    user_groups = merge_user_groups(user)
+    user_groups = user.user_group_memberships.exclude(
+        name__endswith=DEFAULT_USER_GROUP).values_list('id', flat=True)
     data = {'username': user.username,
             'first_name': user.first_name,
             'last_name': user.last_name,
@@ -121,13 +111,14 @@ def deactivate_registrationprofile(user):
 
 def has_helpdesk_group(user):
     """Return true is the user is a member of helpdesk usergroup."""
-    helpdesk_groups = user.user_group_memberships.filter(name__endswith='helpdesk')
+    helpdesk_groups = user.user_group_memberships.filter(
+        name__endswith='helpdesk')
     if helpdesk_groups.exists():
         return True
     return False
 
 
-def update_user(form, user_id):
+def update_user(form, user_id, manager):
     """Update user, registration profile and user groups memeberships."""
     user = User.objects.get(id=user_id)
     user.username = form.cleaned_data['username']
@@ -141,15 +132,18 @@ def update_user(form, user_id):
 
     user.managed_user_groups.clear()
     user.user_group_memberships.clear()
-    user.user_group_memberships = form.cleaned_data['groups']
+    user.user_group_memberships = raadpleger_group(manager)
     user.save()
+    for group in form.cleaned_data['groups']:
+        user.user_group_memberships.add(group)
+        user.save()
     if has_helpdesk_group(user):
-        user.managed_user_groups = form.cleaned_data['groups']
+        user.managed_user_groups = manager.managed_user_groups.all()
         user.save()
 
 
 def raadpleger_group(manager):
-    """Return user_group 'raadpleger'. The group has to be 
+    """Return user_group 'raadpleger'. The group has to be
     assigned to every new user."""
     group = manager.managed_user_groups.filter(
             name__endswith=DEFAULT_USER_GROUP)
@@ -168,12 +162,13 @@ def create_user(form, manager):
         last_name=form.cleaned_data['last_name'],
         email=form.cleaned_data['email'])
     user.save()
-    user.user_group_memberships = form.cleaned_data['groups']
     user.user_group_memberships = raadpleger_group(manager)
     user.save()
+    for group in form.cleaned_data['groups']:
+        user.user_group_memberships.add(group)
+        user.save()
     if has_helpdesk_group(user):
-        user.managed_user_groups = form.cleaned_data['groups']
-        user.managed_user_groups = raadpleger_group(manager)
+        user.managed_user_groups = manager.managed_user_groups.all()
         user.save()
     manager_profile = UserProfile.objects.get(user=manager)
     user_profile = UserProfile(
@@ -280,7 +275,7 @@ def is_manager(user):
 def update_user_form(request, user_id=None):
     """Provides a form to change user account."""
     manager = User.objects.get(username=request.user)
-    groups_queryset = manager.managed_user_groups.exclude(
+    groups_queryset = manager.user_group_memberships.exclude(
         name__endswith=DEFAULT_USER_GROUP)
     kwargs = {'groups_queryset': groups_queryset, 'user_id': user_id}
     if not is_manager(manager):
@@ -296,7 +291,7 @@ def update_user_form(request, user_id=None):
                 domain = request.META.get('HTTP_HOST', 'unknown')
                 reactivate_user(user_id, domain)
             else:
-                update_user(form, user_id)
+                update_user(form, user_id, manager)
             return HttpResponseRedirect('/manager/')
     else:
 
