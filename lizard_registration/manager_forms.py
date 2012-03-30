@@ -38,11 +38,11 @@ class CreateUserForm(forms.Form):
     """Form to create and activate a user."""
 
     def __init__(self, *args, **kwargs):
-        self.manager = kwargs['manager']
-        kwargs.pop('manager')
+        self.groups_queryset = kwargs['groups_queryset']
+        kwargs.pop('groups_queryset')
         super(CreateUserForm, self).__init__(*args, **kwargs)
         self.fields["groups"].widget = forms.CheckboxSelectMultiple()
-        self.fields['groups'].queryset = self.manager.managed_user_groups.all()
+        self.fields['groups'].queryset = self.groups_queryset
 
 
     username = forms.CharField(max_length=30,

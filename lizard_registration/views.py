@@ -28,6 +28,7 @@ SHA1_RE = re.compile('^[a-f0-9]{40}$')
 
 logger = logging.getLogger(__name__)
 
+DEFAULT_USER_GROUP = "raadpleger"
 
 def activation_done(request,
                     template_name='registration/activation_complete.html',
@@ -79,11 +80,23 @@ def activate_user_account(request, activation_key=None):
     return render_to_response(template_name, context)
 
 
+def merge_user_groups(user):
+    """Merge manager's group with memeber's group."""
+    member_groups = list(user.user_group_memberships.exclude(
+            name__endswith=DEFAULT_USER_GROUP).values_list('id', flat=True))
+    manager_groups = list(user.managed_user_groups.exclude(
+            name__endswith=DEFAULT_USER_GROUP).values_list('id', flat=True))
+    for group in manager_groups:
+        if group not in member_groups:
+            member_groups.append(group)
+    return member_groups
+
+
 def user_data(user_id):
     """Returns user data."""
     user = User.objects.get(id=user_id)
     user_profile = UserProfile.objects.get(user__id=user.id)
-    user_groups = user.user_group_memberships.values_list('id', flat=True)
+    user_groups = merge_user_groups(user)
     data = {'username': user.username,
             'first_name': user.first_name,
             'last_name': user.last_name,
@@ -106,6 +119,14 @@ def deactivate_registrationprofile(user):
         registration_profile.save()
 
 
+def has_helpdesk_group(user):
+    """Return true is the user is a member of helpdesk usergroup."""
+    helpdesk_groups = user.user_group_memberships.filter(name__endswith='helpdesk')
+    if helpdesk_groups.exists():
+        return True
+    return False
+
+
 def update_user(form, user_id):
     """Update user, registration profile and user groups memeberships."""
     user = User.objects.get(id=user_id)
@@ -118,9 +139,22 @@ def update_user(form, user_id):
     if form.cleaned_data['is_active'] == False:
         deactivate_registrationprofile(user)
 
+    user.managed_user_groups.clear()
     user.user_group_memberships.clear()
     user.user_group_memberships = form.cleaned_data['groups']
     user.save()
+    if has_helpdesk_group(user):
+        user.managed_user_groups = form.cleaned_data['groups']
+        user.save()
+
+
+def raadpleger_group(manager):
+    """Return user_group 'raadpleger'. The group has to be 
+    assigned to every new user."""
+    group = manager.managed_user_groups.filter(
+            name__endswith=DEFAULT_USER_GROUP)
+    if group.exists():
+        return group
 
 
 def create_user(form, manager):
@@ -135,7 +169,12 @@ def create_user(form, manager):
         email=form.cleaned_data['email'])
     user.save()
     user.user_group_memberships = form.cleaned_data['groups']
+    user.user_group_memberships = raadpleger_group(manager)
     user.save()
+    if has_helpdesk_group(user):
+        user.managed_user_groups = form.cleaned_data['groups']
+        user.managed_user_groups = raadpleger_group(manager)
+        user.save()
     manager_profile = UserProfile.objects.get(user=manager)
     user_profile = UserProfile(
         user=user,
@@ -167,7 +206,7 @@ def send_activation_email(user, registration_profile, domain):
 
 
 def create_inactive_user(form, manager, domain):
-    """"""
+    """Create an inactive user and send an activation email."""
     new_user = create_user(form, manager)
     new_user.is_active = False
     new_user.save()
@@ -241,7 +280,9 @@ def is_manager(user):
 def update_user_form(request, user_id=None):
     """Provides a form to change user account."""
     manager = User.objects.get(username=request.user)
-    kwargs = {'manager': manager, 'user_id': user_id}
+    groups_queryset = manager.managed_user_groups.exclude(
+        name__endswith=DEFAULT_USER_GROUP)
+    kwargs = {'groups_queryset': groups_queryset, 'user_id': user_id}
     if not is_manager(manager):
         return render_to_response('403.html')
 
@@ -270,7 +311,9 @@ def create_user_form(request):
     """Provides a form to create user"""
 
     manager = User.objects.get(username=request.user)
-    kwargs = {'manager': manager}
+    groups_queryset = manager.managed_user_groups.exclude(
+        name__endswith=DEFAULT_USER_GROUP)
+    kwargs = {'groups_queryset': groups_queryset}
     if not is_manager(manager):
         return render_to_response('403.html')
 
