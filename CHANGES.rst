@@ -2,7 +2,7 @@ Changelog of lizard-registration
 ===================================================
 
 
-0.1.5 (unreleased)
+0.1.5 (2012-03-30)
 ------------------
 
 - Updated functionality to view user_groups on update user.
