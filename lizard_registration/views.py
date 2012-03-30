@@ -150,12 +150,19 @@ def raadpleger_group(manager):
     if group.exists():
         return group
 
+def helpdesk_group(manager):
+    """Return user_group 'helpdesk'."""
+    group = manager.managed_user_groups.filter(
+            name__endswith='helpdesk')
+    if group.exists():
+        return group[0]
 
 def create_user(form, manager):
     """
     Creates user account including user profile,
     user groups.
     """
+    manager_profile = UserProfile.objects.get(user=manager)
     user = User(
         username=form.cleaned_data['username'],
         first_name=form.cleaned_data['first_name'],
@@ -164,13 +171,16 @@ def create_user(form, manager):
     user.save()
     user.user_group_memberships = raadpleger_group(manager)
     user.save()
-    for group in form.cleaned_data['groups']:
-        user.user_group_memberships.add(group)
+    if helpdesk_group(manager) in form.cleaned_data['groups']:
+        for group in manager.managed_user_groups.all():
+            user.managed_user_groups.add(group)
+            user.save()
+        user.user_group_memberships.add(helpdesk_group(manager))
         user.save()
-    if has_helpdesk_group(user):
-        user.managed_user_groups = manager.managed_user_groups.all()
-        user.save()
-    manager_profile = UserProfile.objects.get(user=manager)
+    else:
+        for group in form.cleaned_data['groups']:
+            user.user_group_memberships.add(group)
+            user.save()  
     user_profile = UserProfile(
         user=user,
         organisation=manager_profile.organisation)
@@ -275,6 +285,7 @@ def is_manager(user):
 def update_user_form(request, user_id=None):
     """Provides a form to change user account."""
     manager = User.objects.get(username=request.user)
+    user = User.objects.get(id=user_id)
     groups_queryset = manager.user_group_memberships.exclude(
         name__endswith=DEFAULT_USER_GROUP)
     kwargs = {'groups_queryset': groups_queryset, 'user_id': user_id}
