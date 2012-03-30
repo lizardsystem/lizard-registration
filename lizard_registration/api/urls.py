@@ -4,8 +4,6 @@ from django.conf.urls.defaults import patterns
 from django.conf.urls.defaults import url
 from django.contrib import admin
 
-from djangorestframework.views import InstanceModelView
-
 from lizard_registration.api.views import ContextView
 
 admin.autodiscover()

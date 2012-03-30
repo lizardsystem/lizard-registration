@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.gis',
     'django.contrib.sites',
+    'djangorestframework',
     ]
 ROOT_URLCONF = 'lizard_registration.urls'
 
