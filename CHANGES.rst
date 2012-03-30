@@ -2,7 +2,7 @@ Changelog of lizard-registration
 ===================================================
 
 
-0.1.6 (unreleased)
+0.1.6 (2012-03-30)
 ------------------
 
 - Fixed pylint errors.
