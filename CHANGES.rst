@@ -2,7 +2,7 @@ Changelog of lizard-registration
 ===================================================
 
 
-0.1.4 (unreleased)
+0.1.4 (2012-03-30)
 ------------------
 
 - Implemented functionality to add 'raadpleger' user_group to a new user.
