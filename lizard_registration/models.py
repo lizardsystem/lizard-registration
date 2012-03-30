@@ -59,6 +59,7 @@ class IPrangeLogin(models.Model):
         User
     )
 
+    # TODO: ipaddress instead of ipadres.
     ipadres = models.IPAddressField()
 
     created_on = models.DateField(auto_now=True)
