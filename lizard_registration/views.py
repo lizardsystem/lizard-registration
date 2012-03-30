@@ -132,7 +132,7 @@ def update_user(form, user_id, manager):
 
     user.managed_user_groups.clear()
     user.user_group_memberships.clear()
-    user.user_group_memberships = raadpleger_group(manager)
+    user.user_group_memberships.add(raadpleger_group(manager))
     user.save()
     for group in form.cleaned_data['groups']:
         user.user_group_memberships.add(group)
@@ -148,7 +148,7 @@ def raadpleger_group(manager):
     group = manager.managed_user_groups.filter(
             name__endswith=DEFAULT_USER_GROUP)
     if group.exists():
-        return group
+        return group[0]
 
 def helpdesk_group(manager):
     """Return user_group 'helpdesk'."""
@@ -169,7 +169,7 @@ def create_user(form, manager):
         last_name=form.cleaned_data['last_name'],
         email=form.cleaned_data['email'])
     user.save()
-    user.user_group_memberships = raadpleger_group(manager)
+    user.user_group_memberships.add(raadpleger_group(manager))
     user.save()
     if helpdesk_group(manager) in form.cleaned_data['groups']:
         for group in manager.managed_user_groups.all():
@@ -286,7 +286,7 @@ def update_user_form(request, user_id=None):
     """Provides a form to change user account."""
     manager = User.objects.get(username=request.user)
     user = User.objects.get(id=user_id)
-    groups_queryset = manager.user_group_memberships.exclude(
+    groups_queryset = manager.managed_user_groups.exclude(
         name__endswith=DEFAULT_USER_GROUP)
     kwargs = {'groups_queryset': groups_queryset, 'user_id': user_id}
     if not is_manager(manager):
