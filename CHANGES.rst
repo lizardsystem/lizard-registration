@@ -2,7 +2,7 @@ Changelog of lizard-registration
 ===================================================
 
 
-0.1.7 (unreleased)
+0.1.7 (2012-04-02)
 ------------------
 
 - Bugfix sessioncontextstore save for iprange logins.
