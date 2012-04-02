@@ -44,7 +44,7 @@ class ContextView(View):
         if user.iprangelogin_set.all().count() > 0:
             #context of public account are stored based on session_key
             session_key = request.session.session_key
-            context_store, new = user.sessioncontextstore.get_or_create(
+            context_store, new = user.sessioncontextstore_set.get_or_create(
                 session_key=session_key)
             context_store.context = context
             context_store.save()
