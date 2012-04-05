@@ -5,7 +5,10 @@ Changelog of lizard-registration
 0.1.8 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Added comments.
+
+- users_table_view is now visible for all superusers, before it was
+  only viewable by managers.
 
 
 0.1.7 (2012-04-02)

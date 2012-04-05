@@ -180,7 +180,7 @@ def create_user(form, manager):
     else:
         for group in form.cleaned_data['groups']:
             user.user_group_memberships.add(group)
-            user.save()  
+            user.save()
     user_profile = UserProfile(
         user=user,
         organisation=manager_profile.organisation)
@@ -341,7 +341,10 @@ def create_user_form(request):
 
 @csrf_exempt
 def users_table_view(request):
-    """Provides users related to organisation of current manager."""
+    """Provides users related to organisation of current manager.
+
+    Abracadabra.
+    """
     users = User.objects.filter(username=request.user)
     manager = None
     if users.exists():
@@ -350,7 +353,7 @@ def users_table_view(request):
         return HttpResponseRedirect('http://%s' % request.META.get('HTTP_HOST',
                                                                   'unknown'))
 
-    if not is_manager(manager):
+    if not manager.is_superuser and not is_manager(manager):
         return render_to_response('403.html')
 
     try:
@@ -362,11 +365,17 @@ def users_table_view(request):
                                    'message': ','.join(map(str, ex.args)),
                                    'username': manager.username})
 
+    # From lizard-security: which user groups have a manager?
     managed_groups = manager.managed_user_groups.all()
     managed_users = []
+
+    # If the manager manages any user group, he can see all
+    # user profiles of his organization. WTF.
     if managed_groups.exists():
-        managed_users = UserProfile.objects.filter(
-            organisation=userprofile.organisation)
-        managed_users = list(managed_users.exclude(user__is_superuser=True))
+        managed_user_profiles = list(
+            UserProfile.objects.filter(
+                organisation=userprofile.organisation)
+            .exclude(user__is_superuser=True))
+
     return render_to_response('users_table_view.html',
-                              {'managed_users': managed_users})
+                              {'managed_users': managed_user_profiles})

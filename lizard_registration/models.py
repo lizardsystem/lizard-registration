@@ -37,7 +37,6 @@ class UserContextStore(models.Model):
                            help_text='store for context')
 
 
-
 class SessionContextStore(models.Model):
     """
         Store for context for users with a IPrange (these are shared accounts). Store them with the session id
