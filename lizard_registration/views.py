@@ -353,7 +353,7 @@ def users_table_view(request):
         return HttpResponseRedirect('http://%s' % request.META.get('HTTP_HOST',
                                                                   'unknown'))
 
-    if not manager.is_superuser and not is_manager(manager):
+    if not is_manager(manager):
         return render_to_response('403.html')
 
     try:
@@ -371,6 +371,8 @@ def users_table_view(request):
 
     # If the manager manages any user group, he can see all
     # user profiles of his organization. WTF.
+
+    # Oh yeah the .exists() is the same check as in is_manager.
     if managed_groups.exists():
         managed_user_profiles = list(
             UserProfile.objects.filter(

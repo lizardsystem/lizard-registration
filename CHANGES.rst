@@ -7,8 +7,7 @@ Changelog of lizard-registration
 
 - Added comments.
 
-- users_table_view is now visible for all superusers, before it was
-  only viewable by managers.
+- Removed cancel button from users_table_view.
 
 
 0.1.7 (2012-04-02)
