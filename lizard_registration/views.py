@@ -292,13 +292,13 @@ def update_user_form(request, user_id=None):
     if not is_manager(manager):
         return render_to_response('403.html')
 
-    if request.method == 'POST' and request.POST.get("action") == "Cancel":
+    if request.method == 'POST' and request.POST.get("action") == "Annuleren":
         return HttpResponseRedirect('/manager/')
 
     if request.method == 'POST':
         form = UpdateUserForm(request.POST, **kwargs)
         if form.is_valid():
-            if request.POST.get("action") == "Send activation email":
+            if request.POST.get("action") == "Stuur activatie e-mail":
                 domain = request.META.get('HTTP_HOST', 'unknown')
                 reactivate_user(user_id, domain)
             else:
@@ -323,7 +323,7 @@ def create_user_form(request):
     if not is_manager(manager):
         return render_to_response('403.html')
 
-    if request.method == 'POST' and request.POST.get("action") == "Cancel":
+    if request.method == 'POST' and request.POST.get("action") == "Annuleren":
         return HttpResponseRedirect('/manager/')
 
     if request.method == 'POST':

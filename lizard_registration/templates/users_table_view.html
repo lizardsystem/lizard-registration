@@ -6,11 +6,11 @@
 <h2>Selecteer gebruiker om te wijzigen</h2>
 
 <table border=1>
-  <th>Gebruikernaam</th>
+  <th>Gebruikersnaam</th>
   <th>Voornaam</th>
   <th>Achternaam</th>
-  <th>Email</th>
-  <th>Is actief</th>
+  <th>E-mail</th>
+  <th>Actief</th>
   <th>Gebruikersgroepen</th>
   {% for user in managed_users %}
      <tr>
@@ -30,7 +30,7 @@
   <tr>
     <td>
       <form action="/manager/userform/">
-        <input type="submit" name="action" value="Create user" />
+        <input type="submit" name="action" value="Aanmanken gebruiker" />
       </form>
     </td>
   </tr>

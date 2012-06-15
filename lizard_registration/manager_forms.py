@@ -53,7 +53,7 @@ class CreateUserForm(forms.Form):
     last_name = forms.CharField(max_length=30,
                                 label='Achternaam',
                                 required=False)
-    email = forms.EmailField(max_length=200, label='Email', required=True)
+    email = forms.EmailField(max_length=200, label='E-mail', required=True)
 
     groups = forms.ModelMultipleChoiceField(label='GebruikersGroepen',
                                             required=False,
@@ -84,7 +84,7 @@ class UpdateUserForm(CreateUserForm):
         kwargs.pop('user_id')
         super(UpdateUserForm, self).__init__(*args, **kwargs)
 
-    is_active = forms.BooleanField(required=False)
+    is_active = forms.BooleanField(required=False, label='Actief')
 
     def clean_username(self):
         username = self.cleaned_data.get('username')

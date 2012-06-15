@@ -5,7 +5,7 @@ Changelog of lizard-registration
 0.3 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Changed label of fields and buttons, fixed messages in templates, forms.
 
 
 0.2 (2012-04-10)
