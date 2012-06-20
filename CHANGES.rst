@@ -5,8 +5,7 @@ Changelog of lizard-registration
 0.4 (unreleased)
 ----------------
 
-- Nothing changed yet.
-
+- Fixed auto-login as 'raadpleger' functionality.
 
 0.3 (2012-06-15)
 ----------------

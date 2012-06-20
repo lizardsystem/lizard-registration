@@ -39,7 +39,8 @@ class UserContextStore(models.Model):
 
 class SessionContextStore(models.Model):
     """
-        Store for context for users with a IPrange (these are shared accounts). Store them with the session id
+        Store for context for users with a IPrange (these are shared accounts).
+        Store them with the session id
     """
     user = models.ForeignKey(
         User
@@ -60,6 +61,8 @@ class IPrangeLogin(models.Model):
 
     # TODO: ipaddress instead of ipadres.
     ipadres = models.IPAddressField()
+    password = models.CharField(max_length=128,
+                                null=True, blank=True)
 
     created_on = models.DateField(auto_now=True)
 

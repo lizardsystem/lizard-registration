@@ -34,7 +34,7 @@ class UserContextStoreAdmin(admin.ModelAdmin):
         'user',)
 
 class IPrangeLoginAdmin(admin.ModelAdmin):
-    list_display = ['ipadres', 'user']
+    list_display = ['ipadres', 'user', 'password']
     filter = ['user']
     search = ['ipadres']
 

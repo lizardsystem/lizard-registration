@@ -55,7 +55,7 @@ def auto_login(request):
         #todo: change password part of this function
         # Needed for the 'backend' property, see
         # https://docs.djangoproject.com/en/dev/topics/auth/
-        user = authenticate(username=match.user.username, password='iplogin')
+        user = authenticate(username=match.user.username, password=match.password)
         login(request, user)
         return user
 
