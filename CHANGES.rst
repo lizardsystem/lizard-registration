@@ -5,7 +5,11 @@ Changelog of lizard-registration
 0.5 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Fixed pylint errors.
+
+- Fixed auto-login functionality by forwarded ip-address.
+
+- Fixed error on get_user_permissions_overall for anonymous user.
 
 
 0.4 (2012-06-20)
