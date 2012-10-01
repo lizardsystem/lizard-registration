@@ -5,7 +5,9 @@ Changelog of lizard-registration
 0.4.2 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Fixed syntax errors
+
+- Ordered users by username.
 
 
 0.4.1 (2012-06-21)

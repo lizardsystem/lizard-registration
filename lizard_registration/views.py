@@ -377,7 +377,7 @@ def users_table_view(request):
         managed_user_profiles = list(
             UserProfile.objects.filter(
                 organisation=userprofile.organisation)
-            .exclude(user__is_superuser=True))
+            .exclude(user__is_superuser=True).order_by("user__username"))
 
     return render_to_response('users_table_view.html',
                               {'managed_users': managed_user_profiles})
