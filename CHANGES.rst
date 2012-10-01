@@ -3,7 +3,7 @@ Changelog of lizard-registration
 
 
 0.4.2 (2012-10-01)
--------------------
+------------------
 
 - Fixed syntax errors
 
