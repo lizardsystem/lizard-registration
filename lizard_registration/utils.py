@@ -6,6 +6,10 @@ from django.db.models.query_utils import Q
 
 from lizard_registration.models import IPrangeLogin
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 def db_table_exists(table, cursor=None):
     """
@@ -26,6 +30,25 @@ def db_table_exists(table, cursor=None):
         return table in table_names
 
 
+def get_remote_ip(header_meta):
+    client_ip = header_meta.get('HTTP_X_FORWARDED_FOR', None)
+
+    if client_ip:
+        # Split on ',', take the last IP address that is not in the
+        # 10.100 range (those are internal)
+        client_ips = [ip.strip() for ip in client_ip.split(',')
+                      if not ip.strip().startswith('10.100')]
+        if client_ips:
+            client_ip = client_ips[-1]
+        else:
+            client_ip = None
+
+    if client_ip is None:
+        client_ip = header_meta.get('REMOTE_ADDR', None)
+
+    return client_ip
+
+
 def auto_login(request):
     """
         automatically login user when coming from specified ipadresses
@@ -44,10 +67,8 @@ def auto_login(request):
         'AnonymousUser' object has no attribute 'backend'
     """
     client_user = request.user
-    client_ip = request.META.get('HTTP_X_FORWARDED_FOR', None)
-
-    if client_ip is None:
-        client_ip = request.META.get('REMOTE_ADDR', None)
+    client_ip = get_remote_ip(request.META)
+    logger.debug("REMOTE IP: {0}".format(client_ip))
     if client_ip is None:
         return client_user
 

@@ -5,7 +5,7 @@ Changelog of lizard-registration
 0.4.3 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Login by ip pp415.
 
 
 0.4.2 (2012-10-01)
