@@ -2,7 +2,7 @@ Changelog of lizard-registration
 ===================================================
 
 
-0.4.3 (unreleased)
+0.4.3 (2013-01-08)
 ------------------
 
 - Login by ip pp415.
